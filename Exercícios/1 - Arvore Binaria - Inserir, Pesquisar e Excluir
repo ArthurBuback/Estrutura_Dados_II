@@ -1,0 +1,142 @@
+// NOME: ARTHUR TREVIZANI BUBACK
+
+#include <stdio.h>
+#include <stdlib.h>
+#define MAX 6
+
+// Isso determina cada nó de uma árvore
+struct no
+{
+  // Define quanto vale cada nó
+  int valor;
+  // Caso possua um valor menor, adiciona-o a esquerda
+  struct no *esq;
+  // Caso possua um valor maior, adiciona-o a direita
+  struct no *dir;
+};
+
+
+// Define a opção de adicionar um novo valor a árvore
+struct no *espacoDoNo(int valor){
+    // Define o espaço do nó
+  struct no *espaco = (struct no *)malloc(sizeof(struct no));
+
+    // Define a estrutura do nó
+  if(espaco == NULL){
+    printf("Não foi alocado memória corretamente");
+  }
+  espaco->valor = valor;
+  espaco->esq = NULL;
+  espaco->dir = NULL;
+  return espaco;
+}
+
+
+// A função para adicionar um novo elemento
+struct no *inserirElemento(struct no *raiz, int valor)
+{
+    // Caso o espaço não possua um valor, é chamada a função para gera-lo na memória
+  if (raiz == NULL)
+  {
+    raiz == espacoDoNo(valor);
+  }
+  // Caso contrário, ele percorre a árvore até encontrar o espaço mais correto para a árvore
+  else
+  {
+    //Aqui ela percorre para a esquerda caso o valor a ser inserido seja inferior ao valor checado
+    if(valor < raiz->valor)
+      raiz->esq = inserirElemento(raiz->esq, valor);
+    //Aqui ela percorre para a direita caso o valor a ser inserido seja superior ao valor checado
+    if(valor>raiz->valor)
+      raiz->dir = inserirElemento(raiz->dir, valor);
+    //Caso o valor seja igual, ele imprime um pequeno texto
+    else
+      printf("Valor ja está presente");
+  }
+  return raiz;
+}
+
+// A função para pesquisar um novo elemento
+struct no *pesquisarElemento(struct no *raiz, int valor)
+{
+    // Caso o valor seja encontrado, ele imprime uma mensagem
+  if (raiz->valor == valor)
+    printf("Valor encontrado");
+    // Caso contrário ele percorre a árvore a fim de encontra-lo
+  else
+  {
+    //Aqui ela percorre para a esquerda caso o valor a ser pesquisado seja inferior ao valor checado
+    if(valor < raiz->valor)
+      raiz->esq = pesquisarElemento(raiz->esq, valor);
+    //Aqui ela percorre para a direita caso o valor a ser pesquisado seja inferior ao valor checado
+    if(valor>raiz->valor)
+      raiz->dir = pesquisarElemento(raiz->dir, valor);
+    //Caso não possar percorrer nem para a esquerda nem pela direita, sem que o valor seja igual, significa que o valor não está presente
+    else
+      printf("Valor não está presente");
+  }
+  return raiz;
+}
+
+// A função para pesquisar um novo elemento
+struct no *excluirElemento(struct no *raiz, int valor)
+{
+    //Caso o espaço para raiz esteja vazio, ela é retornada, visto que foi cumprida a exclusão
+  if (raiz == NULL)
+  {
+    return raiz;
+  }
+    //Aqui ela percorre para a esquerda caso o valor a ser excluido seja inferior ao valor checado
+    if (valor < raiz->valor)
+      raiz->esq = excluirElemento(raiz->esq, valor);
+    //Aqui ela percorre para a direita caso o valor a ser pesquisado seja inferior ao valor checado
+    else if (valor > raiz->valor)
+      raiz->dir = excluirElemento(raiz->dir, valor);
+    // Caso não presicse mais percorrer, ele irá excluir os valores
+    else
+    {
+        // Se não possuir filhos, basta excluir o valor
+      if(raiz->esq == NULL && raiz->dir == NULL)
+        free(raiz);
+        // Caso possua filho a direita, ele exclui e move o filho com um ponteiro temporário
+      else if (raiz->esq == NULL)
+      {
+        struct no *x = raiz->dir;
+        free(raiz);
+        return x;
+      }
+        // Caso possua filho a esquerda, ele exclui e move o filho com um ponteiro temporário
+      else if (raiz->dir == NULL)
+      {
+        struct no *x = raiz->esq;
+        free(raiz);
+        return x;
+      }
+      // Caso contrário ele percorre novamente a árvore
+    else
+      {
+        struct no *x = raiz->esq;
+        free(raiz);
+        while(raiz->dir != NULL)
+          x = raiz->dir;
+        return x;
+      }
+  }
+}
+
+
+// A main, que deve ser 
+int main(void) {
+  int arvore[MAX];
+    arvore[0] = inserirElemento(arvore,15);
+    arvore[1] = inserirElemento(arvore,93);
+    arvore[2] = inserirElemento(arvore,34);
+    arvore[3] = inserirElemento(arvore,86);
+    arvore[4] = inserirElemento(arvore,16);
+    arvore[5] = inserirElemento(arvore,7);
+
+    pesquisarElemento(arvore, 7);
+    excluirElemento(arvore, 7);
+
+  return 0;
+}
